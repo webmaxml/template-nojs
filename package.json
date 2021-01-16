@@ -1,20 +1,33 @@
 {
   "name": "nojs-template",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "template for html and css only",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sass-watch": "sass src/sass/index.scss:dist/css/style.css --watch",
+    "sass-build": "sass src/sass/index.scss:dist/css/style.css --no-source-map",
+    "sync": "browser-sync --config bs-config.js",
+    "postcss": "postcss dist/css/style.css > dist/css/style.min.css --verbose",
+    "dev": "npm sync & npm sass-watch",
+    "build": "npm run sass-build && npm run postcss"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/webmaxml/template.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "webmaxml",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/webmaxml/template/issues"
   },
-  "homepage": "https://github.com/webmaxml/template#readme"
+  "homepage": "https://github.com/webmaxml/template#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.2.1",
+    "browser-sync": "^2.26.13",
+    "bs-html-injector": "^3.0.3",
+    "cssnano": "^4.1.10",
+    "postcss": "^8.2.4",
+    "postcss-cli": "^8.3.1",
+    "sass": "^1.32.2"
+  }
 }
