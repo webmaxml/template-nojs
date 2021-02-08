@@ -1,6 +1,9 @@
 @import 'reset';
 @import 'normalize';
+@import 'utilities';
+@import 'vars';
 @import 'fonts';
+@import 'base';
 
 body {
   color: rgb(80, 10, 209);
