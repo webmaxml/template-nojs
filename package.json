@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "template for html and css only",
   "scripts": {
-    "dev": "webpack serve --mode=development",
-    "build": "webpack --mode=production --env prod",
-    "sync": "browser-sync start --server dist --files dist --port 3000 --no-notify --no-online --no-ui --no-ghost-mode --no-open"
+    "dev": "webpack serve --mode=development --config webpack.dev.config.js",
+    "build": "webpack --mode=production --config webpack.prod.config.js",
+    "test-dist": "browser-sync start --server dist --files dist --port 3000 --no-notify --no-online --no-ui --no-ghost-mode"
   },
   "repository": {
     "type": "git",
