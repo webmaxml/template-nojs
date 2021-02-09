@@ -1,39 +1,40 @@
-const webpack = require( 'webpack' )
-const path = require( 'path' )
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' )
+// const webpack = require('webpack')
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = env => {
-  const sassLoaders = env.dev ?
-                  ['style-loader', 'css-loader', 'sass-loader'] :
-                  [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
-	
-	return {
-		entry: './src/js/index.js',
-		output: {
-			filename: 'js/app.js',
-			path: path.resolve( __dirname, 'dist' ),
-		},
+  let sassLoaders = ['style-loader', 'css-loader', 'sass-loader']
+  if (env.prod) {
+    sassLoaders = [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+  }
 
-		devServer: {
-			contentBase: path.resolve( __dirname, 'dist' ),
-			watchContentBase: true,
-			compress: true,
-			port: 3000
-		},
+  return {
+    entry: './src/js/index.js',
+    output: {
+      filename: 'js/app.js',
+      path: path.resolve(__dirname, 'dist')
+    },
 
-		module: {
-			rules: [
-				{
-					test: /\.scss$/,
-					use: sassLoaders
-				},
-			],
-		},
+    devServer: {
+      contentBase: path.resolve(__dirname, 'dist'),
+      watchContentBase: true,
+      compress: true,
+      port: 3000
+    },
 
-		plugins: [
-			new MiniCssExtractPlugin({
-				filename: 'css/style.css'
-			}),
-		],
-	}
+    module: {
+      rules: [
+        {
+          test: /\.scss$/,
+          use: sassLoaders
+        }
+      ]
+    },
+
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'css/style.css'
+      })
+    ]
+  }
 }
