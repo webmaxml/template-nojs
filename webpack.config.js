@@ -1,11 +1,45 @@
-// const webpack = require('webpack')
 const path = require('path')
+const glob = require('glob')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const ImageminPlugin = require('imagemin-webpack-plugin').default
+
+const allPlugins = {
+  htmlTemplates: new HtmlWebpackPlugin({
+    filename: 'index.html',
+    template: 'src/hbs/index.hbs',
+    hash: true,
+    minify: false
+  }),
+  cssExtract: new MiniCssExtractPlugin({
+    filename: 'css/style.css'
+  }),
+  copyFiles: new CopyPlugin({
+    patterns: [
+      { from: 'src/fonts', to: 'fonts' }
+    ]
+  }),
+  imgMin: new ImageminPlugin({
+    externalImages: {
+      context: 'src',
+      sources: glob.sync('src/img/**/*.*'),
+      destination: 'dist',
+      fileName: '[path][name].[ext]'
+    },
+    jpegtran: {
+      progressive: true
+    }
+  })
+}
 
 module.exports = env => {
   let sassLoaders = ['style-loader', 'css-loader', 'sass-loader']
+  const plugins = [allPlugins.htmlTemplates, allPlugins.cssExtract]
+
   if (env.prod) {
     sassLoaders = [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+    plugins.push(allPlugins.copyFiles, allPlugins.imgMin)
   }
 
   return {
@@ -16,8 +50,7 @@ module.exports = env => {
     },
 
     devServer: {
-      contentBase: path.resolve(__dirname, 'dist'),
-      watchContentBase: true,
+      contentBase: path.resolve(__dirname, 'src'),
       compress: true,
       port: 3000
     },
@@ -27,14 +60,18 @@ module.exports = env => {
         {
           test: /\.scss$/,
           use: sassLoaders
+        },
+        {
+          test: /\.hbs$/,
+          loader: 'handlebars-loader',
+          options: {
+            partialDirs: [
+              path.resolve(__dirname, 'src/hbs')
+            ]
+          }
         }
       ]
     },
-
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: 'css/style.css'
-      })
-    ]
+    plugins
   }
 }
