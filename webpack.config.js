@@ -3,9 +3,9 @@ const path = require( 'path' )
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' )
 
 module.exports = env => {
-	const sassLoaders = env.dev ?
-									 ['style-loader', 'css-loader', 'sass-loader'] :
-									 [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+  const sassLoaders = env.dev ?
+                  ['style-loader', 'css-loader', 'sass-loader'] :
+                  [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
 	
 	return {
 		entry: './src/js/index.js',
