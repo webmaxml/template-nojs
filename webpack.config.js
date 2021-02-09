@@ -6,9 +6,9 @@ const CopyPlugin = require('copy-webpack-plugin')
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 
 const allPlugins = {
-  htmlTemplates: new HtmlWebpackPlugin({
+  indexHtml: new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: 'src/hbs/index.hbs',
+    template: 'src/components/pages/home/home.hbs',
     hash: true,
     minify: false
   }),
@@ -35,7 +35,7 @@ const allPlugins = {
 
 module.exports = env => {
   let sassLoaders = ['style-loader', 'css-loader', 'sass-loader']
-  const plugins = [allPlugins.htmlTemplates, allPlugins.cssExtract]
+  const plugins = [allPlugins.indexHtml, allPlugins.cssExtract]
 
   if (env.prod) {
     sassLoaders = [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
@@ -66,7 +66,8 @@ module.exports = env => {
           loader: 'handlebars-loader',
           options: {
             partialDirs: [
-              path.resolve(__dirname, 'src/hbs')
+              path.resolve(__dirname, 'src/hbs'),
+              path.resolve(__dirname, 'src/components')
             ]
           }
         }
