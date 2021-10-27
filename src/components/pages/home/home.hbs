@@ -3,11 +3,28 @@
 <head>
   {{> meta }}
 	{{> style }}
+  <style>
+    .add input {
+      border: 1px solid #000;
+    }
+    .item {
+      display: flex;
+      flex-flow: row nowrap;
+    }
+    .item button {
+      border: 1px solid green;
+    }
+  </style>
+
 </head>
 <body>
-  <i class="fas fa-ankh"></i>
-  <i class="icofont-anchor"></i>
-  <div>Lorem ipsum, dolor sit amet consectetur adipisicing elit</div>
-  <img src="img/table.jpg" alt="">
+
+    <form action="" class="add">
+      <input type="text" class="add-input">
+      <button class="add-btn">ADD</button>
+    </form>
+
+    <ul class="list"></ul>
+
 </body>
 </html>
