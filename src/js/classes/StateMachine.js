@@ -52,6 +52,7 @@ class EventListener {
 class StateMachine {
   constructor() {
     this.currentState = null
+    this.handler = null
   }
 
   go(state, ...args) {
@@ -60,81 +61,21 @@ class StateMachine {
     if (!this.isAllowedTransition(state)) { 
       throw new Error(`Not allowed transition from '${this.currentState}' to '${state}'`)
     }
-    if (this.states[this.currentState]) { this.states[this.currentState].onExit() }
+    if (this.handler) { this.handler.onExit() }
 
     this.currentState = state
-    this.states[this.currentState].onEnter(...args)
+    this.handler = this.states[this.currentState]
+
+    this.handler.onEnter(...args)
   }
 
   isAllowedTransition(state) {
-    const restrictions = this.restrictions[this.currentState]
-
-    if (!restrictions) { return true }
-    return restrictions.includes(state)
+    if (!this.restrictions || !this.restrictions[this.currentState]) { return true }
+    return this.restrictions[this.currentState].includes(state)
   }
 
-}
-
-
-
-class State {
-  constructor() {
-  }
 }
 
 // }>>
 
-// <<{ Test
-
-class Test extends StateMachine {
-  constructor() {
-    super()
-    this.states = {
-      red: new Red(this),
-      green: new Green(this),
-      blue: new Blue(this),
-    }
-    this.restrictions = {
-      green: ['blue', 'red'],
-      blue: ['red'],
-      red: ['green'],
-    }
-
-    this.go('green')
-  }
-}
-
-class Red extends State {
-  constructor(machine) { 
-    super()
-    this.machine = machine 
-  }
-
-  onEnter() { console.log('red enter') }
-  onExit() { console.log('red leave') }
-}
-
-class Green extends State {
-  constructor(machine) { 
-    super()
-    this.machine = machine 
-  }
-
-  onEnter() { console.log('green enter') }
-  onExit() { console.log('green leave') }
-}
-
-class Blue extends State {
-  constructor(machine) { 
-    super()
-    this.machine = machine 
-  }
-
-  onEnter() { console.log('blue enter') }
-  onExit() { console.log('blue leave') }
-}
-
-const test = new Test
-
-
-// }>>
+export default StateMachine

@@ -1,9 +1,10 @@
 import DomMapper from '../mappers/DomMapper'
 
 class AddInputView extends DomMapper {
-  constructor(selector = '.add-input') {
-    super({ selector, singleton: true })
+  constructor(data) {
+    super(data)
   }
 }
 
-export default AddInputView
+const addInput = new AddInputView('.add-input')
+export default addInput

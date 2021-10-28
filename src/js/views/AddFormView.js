@@ -1,9 +1,10 @@
 import DomMapper from '../mappers/DomMapper'
 
 class AddFormView extends DomMapper {
-  constructor(selector = '.add') {
-    super({ selector, singleton: true })
+  constructor(data) {
+    super(data)
   }
 }
 
-export default AddFormView
+const addForm = new AddFormView('.add')
+export default addForm

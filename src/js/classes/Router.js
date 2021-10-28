@@ -1,20 +1,99 @@
+import StateMachine from './StateMachine'
 
-class Router {
+import Home from '../routes/Home'
+
+import listController from '../controllers/ListController'
+
+// <<{ Router
+
+class Router extends StateMachine {
   constructor() {
-    if (this.constructor.inst) { return this.constructor.inst }
-    this.constructor.inst = this
-
-    this.home = new Home
+    super()
+    this.actions = {}
+    this.states = {
+      home: new Home(this),
+    }
+    
+    this.go('home')
   }
 
-  add(view, event, cb) {
-    view.on(event, cb)
+  addEvent(action, event, cbString) {
+    return this.actions[action] = new EventAction(event, new Callback(cbString))
   }
 
+  addPromise(action, event, cbString) {
+    return this.actions[action] = new PromiseAction(event, new Callback(cbString))
+  }
+
+  activate(action, data) {
+    this.actions[action].activate(data)
+  }
 }
 
+// }>>
 
-class Home extends Router {
+// <<{ Callback
+
+class Callback {
+  constructor(string) {
+    this.sep = ':'
+    this.controllers = {
+      listController,
+    }
+
+    const i = string.indexOf(this.sep)
+    const controllerName = string.slice(0, i)
+    const cbName = string.slice(i + 1)
+
+    const controller = this.controllers[controllerName]
+    if (!controller) { throw new Error(`No such controller - '${controllerName}`) }
+
+    this.cb = controller[cbName].bind(controller)
+  }
+
+  getCb() {
+    return this.cb
+  }
 }
 
-export default Router
+// }>>
+
+// <<{ Actions
+
+class EventAction {
+  constructor(event, callback) {
+    this.event = event
+    this.callback = callback
+  }
+
+  activate(view) {
+    view.on(this.event, this.callback.getCb())
+    this.view = view
+  }
+}
+
+class PromiseAction {
+  constructor(event, callback) {
+    this.successEvent = 'success'
+    this.errorEvent = 'error'
+
+    if (event !== this.successEvent && event !== this.errorEvent) {
+      throw new Error(`Event in promise action must be either '${this.successEvent}' or '${this.errorEvent}'`)
+    }
+
+    this.event = event
+    this.callback = callback
+  }
+
+  activate(promise) {
+    switch (this.event) {
+      case this.successEvent: promise.then(this.callback.getCb()); break;
+      case this.errorEvent: promise.catch(this.callback.getCb()); break;
+    }
+  }
+}
+
+// }>>
+
+const router = new Router
+export default router

@@ -1,9 +1,10 @@
 import DomMapper from '../mappers/DomMapper'
 
 class ListView extends DomMapper {
-  constructor(selector = '.list') {
-    super({ selector, singleton: true })
+  constructor(data) {
+    super(data)
   }
 }
 
-export default ListView
+const list = new ListView('.list')
+export default list

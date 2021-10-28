@@ -18,17 +18,19 @@ class EventsRepository {
   }
 
   remove(event, cb) {
-    if (this.events[event]) {
+    if (event && cb) {
+      if (!this.events[event]) { return }
+
       const i = this.events[event].indexOf(cb)
       if (i !== -1) { this.events[event].splice(i, 1) }
+      return
     }
-  }
 
-  removeEvent(event) {
-    delete this.events[event]
-  }
+    if (event) {
+      delete this.events[event]
+      return
+    }
 
-  removeAll() {
     this.events = {}
   }
 }

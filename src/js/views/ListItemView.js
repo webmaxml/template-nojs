@@ -1,13 +1,13 @@
 import DomMapper from '../mappers/DomMapper'
 
 class ListItemView extends DomMapper {
-  constructor(selector) {
-    super({ selector })
+  constructor(data) {
+    super(data)
   }
 
-  template() {
+  template(data) {
     return `<li class="item">
-              <div class="content">${this.content.title}</div>
+              <div class="content">${data.title}</div>
               <div class="buttons">
                 <button type="button" data-action="change">change</button>
                 <button type="button" data-action="move-up">move up</button>
